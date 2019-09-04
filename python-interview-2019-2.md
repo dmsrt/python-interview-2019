@@ -43,19 +43,22 @@
 
    def record(output):
     """自定义带参数的装饰器"""
-	   count = 5
-	   def decorate(func):
+	from functools import wraps
+	
+	def retry(tries=1, errors=(Exception, )):
+	    def out(func):
 		
-         @wraps(func)
-         def wrapper(*args, **kwargs):
-            n = 0
-            result = func(*args, **kwargs)
-            output(func.__name__, time() - start)
-            return result
-
-         return wrapper
-
-      return decorate
+		@wraps(func)
+		def inner(*args, **kwargs):
+		    for _ in range(tries):
+		        try:
+		            return func(*args, **kwargs)
+		        except erros:
+		    	    pass
+		
+		return inner
+	return outer
+		
    ```
 
 4. 下面的字典中保存了某些公司今日的股票代码及价格，用一句Python代码从中找出价格最高的股票对应的股票代码，用一句Python代码创建股票价格大于100的股票组成的新字典。
@@ -102,7 +105,15 @@
    答案：
 
    ```Python
-   
+       def depth_of_list(items):
+           if isinstance(items, list):
+	       max_depth = 1
+	       for item in items:
+	           curr_depth = depth_of_list(item)
+		   if curr_depth + 1 > max_depth:
+		       max_depth = curr_depth + 1
+		return max_depth
+	return 0
    ```
 
 7. 写一个函数，实现将输入的长链接转换成短链接，每个长链接对应的短链接必须是独一无二的且每个长链接只应该对应到一个短链接，假设短链接统一以`http://t.cn/`开头。
